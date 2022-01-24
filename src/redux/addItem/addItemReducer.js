@@ -1,38 +1,30 @@
 
-import { ADD_ITEM, DEL_ITEM,  COMPLETE_ITEM } from './addItemTypes'
+import { ADD_ITEM, DEL_ITEM, COMPLETE_ITEM } from './addItemTypes'
 
 const intialState = {
-    content: [],
-    completeid: [],
-    deleteContent: [],
-    inCompleteid: []
+    content: []
 }
 
 
-const addReducer = (state = intialState, action) => {
+const addReducer = (state = intialState, { type, payload }) => {
 
-    switch (action.type) {
+    switch (type) {
         case ADD_ITEM:
             return {
-                ...state, content: [...state.content, action.payload],
-                inCompleteid: [...state.inCompleteid, action.payload]
+                ...state, content: [...state.content, payload],
+
             }
         case DEL_ITEM:
-
             return {
                 ...state,
-                content: state.content.filter((newItem, index) => newItem.content !== action.payload),
-                deleteContent: [...state.deleteContent, state.content.filter((newItem, index) => newItem.content === action.payload)[0]],
-                completeid: state.completeid.filter((newItem, index) => newItem.content !== action.payload),
-                inCompleteid: state.inCompleteid.filter((newItem, index) => newItem.content !== action.payload)
+                content: [...state.content, state.content.map(newItem => { if (newItem !== undefined) if (newItem.id === payload) newItem.isDeleted = true })[0]]
             }
         case COMPLETE_ITEM:
-            
             return {
                 ...state,
-                completeid: [...state.completeid, state.content.filter((newItem, index) => newItem.content === action.payload)[0]],
-                inCompleteid: state.inCompleteid.filter((e, i) => e.content !== action.payload)
+                content: [...state.content, state.content.map(newItem => { if (newItem !== undefined) if (newItem.id === payload) newItem.isCompleted = true })[0]]
             }
+
 
 
         default: return {
